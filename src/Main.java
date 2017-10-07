@@ -84,10 +84,10 @@ class Graph {
     private HashMap<String, ArrayList<Edge>> vertices;
     private HashMap<String, Character> vertexValues;
     private ArrayList<Edge> allEdges;
-
     private int rows;
-
     private int cols;
+
+
     public Graph(HashMap<String, ArrayList<Edge>> vertices) {
         this.vertices = vertices;
         allEdges = new ArrayList<>();
@@ -110,7 +110,10 @@ class Graph {
         Queue<String> vertexQueue = new LinkedList<>();
         boolean[][] visited = new boolean[rows][cols];
 
-        visited[Character.getNumericValue(root.charAt(0))][Character.getNumericValue(root.charAt(2))] = true;
+        String[] rowsAndCols = root.split(",");
+        int rootRows = Integer.parseInt(rowsAndCols[0]);
+        int rootCols = Integer.parseInt(rowsAndCols[1]);
+        visited[rootRows][rootCols] = true;
         vertexQueue.add(root);
 
         ArrayList<Edge> updatedEdges = new ArrayList<>();
@@ -123,8 +126,11 @@ class Graph {
 
             for(Edge edge : edges) {
                 String vertex = edge.getVertexTo();
-                if(!visited[Character.getNumericValue(vertex.charAt(0))][Character.getNumericValue(vertex.charAt(2))]) {
-                    visited[Character.getNumericValue(vertex.charAt(0))][Character.getNumericValue(vertex.charAt(2))] = true;
+                String[] vertexRowsAndCols = vertex.split(",");
+                int vertexRows = Integer.parseInt(vertexRowsAndCols[0]);
+                int vertexCols = Integer.parseInt(vertexRowsAndCols[1]);
+                if(!visited[vertexRows][vertexCols]) {
+                    visited[vertexRows][vertexCols] = true;
                     vertexDistance.put(vertex, vertexDistance.get(current) + 1);
                     if(vertexValues.get(vertex) != ' ') {
                         Edge updatedEdge = new Edge(root, vertex);
@@ -168,40 +174,23 @@ class Graph {
         return totalWeight;
     }
 
-
-    public HashMap<String, Character> getVertexValues() {
-        return vertexValues;
-    }
-
     public void setVertexValues(HashMap<String, Character> vertexValues) {
         this.vertexValues = vertexValues;
-    }
-
-    public int getRows() {
-        return rows;
     }
 
     public void setRows(int rows) {
         this.rows = rows;
     }
 
-    public int getCols() {
-        return cols;
-    }
-
     public void setCols(int cols) {
         this.cols = cols;
-    }
-
-    public HashMap<String, ArrayList<Edge>> getVertices() {
-        return vertices;
     }
 
 }
 
 class DisjointedSet {
-    HashMap<String, String> parents;
-    HashMap<String, Integer> ranks;
+    private HashMap<String, String> parents;
+    private HashMap<String, Integer> ranks;
 
     public DisjointedSet(HashMap<String, ArrayList<Edge>> vertices) {
         parents = new HashMap<>();
@@ -249,17 +238,11 @@ class Edge {
         return vertexFrom;
     }
 
-    public void setVertexFrom(String vertexFrom) {
-        this.vertexFrom = vertexFrom;
-    }
 
     public String getVertexTo() {
         return vertexTo;
     }
 
-    public void setVertexTo(String vertexTo) {
-        this.vertexTo = vertexTo;
-    }
 
     public int getWeight() {
         return weight;
